@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import List from "./components/List";
-import { ListProvider } from "./context/ListContext";
+import "../App.css";
+import List from "../components/List";
+import { ListProvider } from "../context/ListContext";
 import { PlusCircle } from "react-feather";
-import Modal from "./components/Modal";
+import Modal from "../components/Modal";
+import { useAuth } from "../context/AuthContext";
 
 function App() {
   const [newTask, setNewTask] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const { handleUserLogout } = useAuth();
 
   const storedLists = JSON.parse(localStorage.getItem("lists")) || {};
 
@@ -70,7 +72,7 @@ function App() {
           />
           <button
             className="px-3 py-2 text-[#fe6d73] bg-gray-800 rounded-lg shadow-md"
-            onClick={() => addTask(newTask, "TODO")}
+            onClick={() => addTask(newTask, Object.keys(lists)[0])}
           >
             Add
           </button>
@@ -97,6 +99,10 @@ function App() {
           <Modal onClose={() => setShowModal(false)} addList={addList} />
         )}
       </div>
+      <div
+        className="absolute bg-red-400 top-0 right-0 rounded-full w-9 aspect-square m-5 cursor-pointer"
+        onClick={handleUserLogout}
+      ></div>
     </ListProvider>
   );
 }
